@@ -476,6 +476,9 @@ if __name__ == "__main__":
     for r, d, f in os.walk(args.input_img_dir):
         for i in f:
             images.append(os.path.join(r, i))
+
+    width = 608
+    height = 608
     for image in images:
         im = cv2.imread(image)
 
