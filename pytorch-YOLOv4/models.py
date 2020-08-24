@@ -500,5 +500,5 @@ if __name__ == "__main__":
         namesfile = 'data/myown.names'
 
         class_names = load_class_names(namesfile)
-        image_name = os.path.join(args.output_dir, os.path.basename(image)[:-4] + '_result.jpg')
+        image_name = os.path.join(args.output_dir, os.path.basename(image)[:-4] + '_coco_yolo_result.jpg')
         plot_boxes_cv2(img, boxes[0], image_name, class_names)
