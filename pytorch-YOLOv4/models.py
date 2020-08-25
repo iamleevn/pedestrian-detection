@@ -3,6 +3,7 @@ from torch import nn
 import torch.nn.functional as F
 from tool.torch_utils import *
 from tool.yolo_layer import YoloLayer
+import argparse
 
 
 class Mish(torch.nn.Module):
@@ -501,4 +502,4 @@ if __name__ == "__main__":
 
         class_names = load_class_names(namesfile)
         image_name = os.path.join(args.output_dir, os.path.basename(image)[:-4] + '_coco_yolo_result.jpg')
-        plot_boxes_cv2(img, boxes[0], image_name, class_names)
+        plot_boxes_cv2(im, boxes[0], image_name, class_names)
