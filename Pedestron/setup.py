@@ -10,7 +10,7 @@ from torch.utils.cpp_extension import BuildExtension, CUDAExtension
 
 
 def readme():
-    with open('README.md', encoding='utf-8') as f:
+    with open('pedestron_readme.md', encoding='utf-8') as f:
         content = f.read()
     return content
 
