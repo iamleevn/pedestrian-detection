@@ -63,7 +63,8 @@ def show_result(img, result, class_names, score_thr=0.3, out_file=None):
         class_names=class_names,
         score_thr=score_thr,
         show=out_file is None,
-        out_file=out_file)
+        out_file=out_file,
+        thickness=4)
 
 def mock_detector(model, image_name, output_dir):
     image = cv2.imread(image_name)

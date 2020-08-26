@@ -175,10 +175,10 @@ def detect_skimage(cfgfile, weightfile, imgfile):
 
 def get_args():
     parser = argparse.ArgumentParser('Test your image or video by trained model.')
-    parser.add_argument('-cfgfile', type=str, default='./cfg/yolov4.cfg',
+    parser.add_argument('-cfgfile', type=str, default='./cfg/yolov4-custom.cfg',
                         help='path of cfg file', dest='cfgfile')
     parser.add_argument('-weightfile', type=str,
-                        default='./checkpoints/Yolov4_epoch1.pth',
+                        default='./weights/yolov4.weights',
                         help='path of trained model.', dest='weightfile')
     # parser.add_argument('-imgfile', type=str,
     #                     default='./data/mscoco2017/train2017/190109_180343_00154162.jpg',
