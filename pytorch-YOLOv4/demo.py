@@ -2,6 +2,7 @@
 '''
 @Time          : 20/04/25 15:49
 @Author        : huguanghao
+@Edited        : iamleevn
 @File          : demo.py
 @Noice         :
 @Modificattion :
@@ -14,6 +15,7 @@
 # import time
 # from PIL import Image, ImageDraw
 # from models.tiny_yolo import TinyYoloNet
+import os
 from tool.utils import *
 from tool.torch_utils import *
 from tool.darknet2pytorch import Darknet
@@ -54,6 +56,40 @@ def detect_cv2(cfgfile, weightfile, imgfile):
             print('%s: Predicted in %f seconds.' % (imgfile, (finish - start)))
 
     plot_boxes_cv2(img, boxes[0], savename='predictions.jpg', class_names=class_names)
+
+def detect_folder(cfgfile, weightfile, input_dir, output_dir):
+    import cv2
+    m = Darknet(cfgfile)
+
+    m.print_network()
+    m.load_weights(weightfile)
+    print('Loading weights from %s... Done!' % (weightfile))
+
+    if use_cuda:
+        m.cuda()
+
+    namesfile = 'data/myown.names'
+    class_names = load_class_names(namesfile)
+
+    images = []
+    for r, d, f in os.walk(input_dir):
+        for i in f:
+            images.append(os.path.join(r, i))
+
+    for im in images:
+        img = cv2.imread(imgfile)
+        sized = cv2.resize(img, (m.width, m.height))
+        sized = cv2.cvtColor(sized, cv2.COLOR_BGR2RGB)
+
+        for i in range(2):
+            start = time.time()
+            boxes = do_detect(m, sized, 0.4, 0.6, use_cuda)
+            finish = time.time()
+            if i == 1:
+                print('%s: Predicted in %f seconds.' % (imgfile, (finish - start)))
+
+        output_name = os.path.join(output_dir, os.path.basename(im)[:-4] + '_kaist_yolo_result.jpg')
+        plot_boxes_cv2(img, boxes[0], savename=output_name, class_names=class_names)
 
 
 def detect_cv2_camera(cfgfile, weightfile):
@@ -134,6 +170,7 @@ def detect_skimage(cfgfile, weightfile, imgfile):
     plot_boxes_cv2(img, boxes, savename='predictions.jpg', class_names=class_names)
 
 
+
 def get_args():
     parser = argparse.ArgumentParser('Test your image or video by trained model.')
     parser.add_argument('-cfgfile', type=str, default='./cfg/yolov4.cfg',
@@ -141,9 +178,15 @@ def get_args():
     parser.add_argument('-weightfile', type=str,
                         default='./checkpoints/Yolov4_epoch1.pth',
                         help='path of trained model.', dest='weightfile')
-    parser.add_argument('-imgfile', type=str,
-                        default='./data/mscoco2017/train2017/190109_180343_00154162.jpg',
-                        help='path of your image file.', dest='imgfile')
+    # parser.add_argument('-imgfile', type=str,
+    #                     default='./data/mscoco2017/train2017/190109_180343_00154162.jpg',
+    #                     help='path of your image file.', dest='imgfile')
+    parser.add_argument('-input_dir', type=str,
+                        default='./demo_images/',
+                        help='path contains input images', dest='inputdir')
+    parser.add_argument('-output_dir', type=str,
+                        default='./result_images/',
+                        help='path contains detection results', dest='outputdir')
     args = parser.parse_args()
 
     return args
@@ -151,10 +194,11 @@ def get_args():
 
 if __name__ == '__main__':
     args = get_args()
-    if args.imgfile:
-        detect_cv2(args.cfgfile, args.weightfile, args.imgfile)
-        # detect_imges(args.cfgfile, args.weightfile)
-        # detect_cv2(args.cfgfile, args.weightfile, args.imgfile)
-        # detect_skimage(args.cfgfile, args.weightfile, args.imgfile)
-    else:
-        detect_cv2_camera(args.cfgfile, args.weightfile)
+    # if args.imgfile:
+    #     detect_cv2(args.cfgfile, args.weightfile, args.imgfile)
+    #     # detect_imges(args.cfgfile, args.weightfile)
+    #     # detect_cv2(args.cfgfile, args.weightfile, args.imgfile)
+    #     # detect_skimage(args.cfgfile, args.weightfile, args.imgfile)
+    # else:
+    #     detect_cv2_camera(args.cfgfile, args.weightfile)
+    detect_folder(args.cfgfile, args.weightfile, args.inputdir, args.outputdir)
