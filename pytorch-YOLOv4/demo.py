@@ -76,8 +76,10 @@ def detect_folder(cfgfile, weightfile, input_dir, output_dir):
         for i in f:
             images.append(os.path.join(r, i))
 
-    for im in images:
-        img = cv2.imread(imgfile)
+    print(images)
+
+    for image in images:
+        img = cv2.imread(image)
         sized = cv2.resize(img, (m.width, m.height))
         sized = cv2.cvtColor(sized, cv2.COLOR_BGR2RGB)
 
@@ -86,9 +88,9 @@ def detect_folder(cfgfile, weightfile, input_dir, output_dir):
             boxes = do_detect(m, sized, 0.4, 0.6, use_cuda)
             finish = time.time()
             if i == 1:
-                print('%s: Predicted in %f seconds.' % (imgfile, (finish - start)))
+                print('%s: Predicted in %f seconds.' % (image, (finish - start)))
 
-        output_name = os.path.join(output_dir, os.path.basename(im)[:-4] + '_kaist_yolo_result.jpg')
+        output_name = os.path.join(output_dir, os.path.basename(image)[:-4] + '_kaist_yolo_result.jpg')
         plot_boxes_cv2(img, boxes[0], savename=output_name, class_names=class_names)
 
 
@@ -182,10 +184,10 @@ def get_args():
     #                     default='./data/mscoco2017/train2017/190109_180343_00154162.jpg',
     #                     help='path of your image file.', dest='imgfile')
     parser.add_argument('-input_dir', type=str,
-                        default='./demo_images/',
+                        default='../demo_images/',
                         help='path contains input images', dest='inputdir')
     parser.add_argument('-output_dir', type=str,
-                        default='./result_images/',
+                        default='../result_images/',
                         help='path contains detection results', dest='outputdir')
     args = parser.parse_args()
 
