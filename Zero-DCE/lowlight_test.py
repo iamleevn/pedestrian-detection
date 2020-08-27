@@ -63,7 +63,7 @@ def mylowlight(image_path, output_dir):
 	end_time = (time.time() - start)
 	print(end_time)
 
-	result_path = os.path.join(outputdir, 'zeroDCE_' + os.path.basename(iamge_path))
+	result_path = os.path.join(output_dir, 'zeroDCE_' + os.path.basename(image_path))
 	torchvision.utils.save_image(enhanced_image, result_path)
 
 
@@ -92,4 +92,4 @@ if __name__ == '__main__':
 
 		for image in file_list:
 			print(image)
-			mylowlight(image)
+			mylowlight(image, output_dir)
